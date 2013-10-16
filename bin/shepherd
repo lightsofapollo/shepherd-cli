@@ -1,0 +1,22 @@
+#! /usr/bin/env node
+
+/**
+when invoked will require the module for this particular type of command.
+*/
+function command(name) {
+  return function() {
+    require(name).apply(this, arguments);
+  }
+}
+
+var program = require('commander');
+
+program.
+  option('--gh-token [github token]', 'github oAuth2 token');
+
+program.
+  command('setup-github-project <user/repo> <shepherd_url>').
+  description('setup github hooks for a given project').
+  action(command('../lib/setup_github_project'));
+
+program.parse(process.argv);
